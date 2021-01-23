@@ -72,7 +72,7 @@ namespace ElvisApi
                 app.UseDeveloperExceptionPage();
             }
 
-            // app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             app.UseRouting();
 
@@ -81,12 +81,12 @@ namespace ElvisApi
          app.UseCors();
          app.UseAuthorization();
 
-        // Shows UseCors with CorsPolicyBuilder.
-        //app.UseCors(x => x
-        //     .AllowAnyMethod()
-        //     .AllowAnyHeader()
-        //     .SetIsOriginAllowed(origin => true)); // allow any origin
-        //    // .AllowCredentials()); // allow credentials
+            // Shows UseCors with CorsPolicyBuilder.
+            app.UseCors(x => x
+                 .AllowAnyMethod()
+                 .AllowAnyHeader()
+                 .SetIsOriginAllowed(origin => true)); // allow any origin
+            // .AllowCredentials()); // allow credentials
 
             app.UseEndpoints(endpoints =>
             {
