@@ -33,6 +33,16 @@ namespace ElvisApi.Controllers
         }
 
 
+        [Route("{id}")]
+        [HttpGet("GetByID")]
+        public Statement GetByID(int id)
+        {
+
+            return service.GetStatementById(id);
+        }
+
+
+
         [Route("{str}")]
         [HttpGet]
         public string Index(string str)

@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
 
 namespace ElvisApi
@@ -34,11 +35,13 @@ namespace ElvisApi
 
             services.AddControllers();
 
+            services.AddSwaggerGen();
+
 
             services.AddDbContext<PostgreSqlContext>(options =>
                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
-           // services.AddMvc();
+           services.AddMvc();
 
 
             services.AddScoped<IRepository<Statement>, Repository<Statement>>();
@@ -56,6 +59,14 @@ namespace ElvisApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "PlaceInfo Services");
+                options.RoutePrefix = string.Empty;
+            });
+
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -65,12 +76,13 @@ namespace ElvisApi
 
             app.UseRouting();
 
+       
 
-            ///app.UseCors();
-            // app.UseAuthorization();
+        ///app.UseCors();
+        // app.UseAuthorization();
 
-            // Shows UseCors with CorsPolicyBuilder.
-            app.UseCors(x => x
+        // Shows UseCors with CorsPolicyBuilder.
+        app.UseCors(x => x
              .AllowAnyMethod()
              .AllowAnyHeader()
              .SetIsOriginAllowed(origin => true)); // allow any origin
@@ -82,31 +94,12 @@ namespace ElvisApi
             });
 
 
-            app.UseEndpoints(endpoints =>
+            app.Run(async (context) =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                await context.Response.WriteAsync("Hello World!");
             });
-
-
-            //app.UseEndpoints(endpoints =>
-            //{
-            //    endpoints.MapControllerRoute(
-            //        name: "default",
-            //        pattern: "{controller}/{action}/{id?}");
-            //});
         }
 
-
-
-        //private void ConfigureRoutes(IRouteBuilder routeBuilder)
-        //{
-        //    routeBuilder.MapRoute("Default",
-        //        "{controller=Statement}/{action=GetAll}/{filter?}");
-        //}
-
-
+   
     }
 }
