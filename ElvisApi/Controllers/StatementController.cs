@@ -24,8 +24,7 @@ namespace ElvisApi.Controllers
             this.service = service;
         }
 
-        [Route("{filter}")]
-        [HttpPost("GetAll")]
+        [HttpPost("GetAll/{filter}")]
         public PagedResult<Statement> GetAll([FromForm] string filter)
         {
 
@@ -33,8 +32,8 @@ namespace ElvisApi.Controllers
         }
 
 
-        [Route("{id}")]
-        [HttpGet("GetByID")]
+     
+        [HttpGet("GetByID/{id}")]
         public Statement GetByID(int id)
         {
 
@@ -43,8 +42,8 @@ namespace ElvisApi.Controllers
 
 
 
-        [Route("{str}")]
-        [HttpGet]
+       
+        [HttpGet("index/{str}")]
         public string Index(string str)
         {
             return str;

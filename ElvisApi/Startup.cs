@@ -35,8 +35,15 @@ namespace ElvisApi
 
             services.AddControllers();
 
-            services.AddSwaggerGen();
-
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v2", new Microsoft.OpenApi.Models.OpenApiInfo
+                {
+                    Title = "Place Info Service API",
+                    Version = "v2",
+                    Description = "Sample service for Learner",
+                });
+            });
 
             services.AddDbContext<PostgreSqlContext>(options =>
                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
@@ -47,51 +54,47 @@ namespace ElvisApi
             services.AddScoped<IRepository<Statement>, Repository<Statement>>();
             services.AddScoped<IStatementService, StatementService>();
 
-            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
-            {
-                builder.AllowAnyOrigin()
-                       .AllowAnyMethod()
-                       .AllowAnyHeader();
-            }));
+            //services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            //{
+            //    builder.AllowAnyOrigin()
+            //           .AllowAnyMethod()
+            //           .AllowAnyHeader();
+            //}));
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseSwagger();
-            app.UseSwaggerUI(options =>
-            {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "PlaceInfo Services");
-                options.RoutePrefix = string.Empty;
-            });
-
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
 
             app.UseRouting();
 
        
 
-        ///app.UseCors();
-        // app.UseAuthorization();
+         app.UseCors();
+         app.UseAuthorization();
 
         // Shows UseCors with CorsPolicyBuilder.
-        app.UseCors(x => x
-             .AllowAnyMethod()
-             .AllowAnyHeader()
-             .SetIsOriginAllowed(origin => true)); // allow any origin
-            // .AllowCredentials()); // allow credentials
+        //app.UseCors(x => x
+        //     .AllowAnyMethod()
+        //     .AllowAnyHeader()
+        //     .SetIsOriginAllowed(origin => true)); // allow any origin
+        //    // .AllowCredentials()); // allow credentials
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v2/swagger.json", "PlaceInfo Services"));
 
 
             app.Run(async (context) =>
