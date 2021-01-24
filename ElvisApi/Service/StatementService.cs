@@ -18,12 +18,12 @@ namespace ElvisApi.Service
             this.repo = repo;
         }
 
-        public PagedResult<Statement> GetAllStatements(string filter)
+        public PagedResult<StatementModel> GetAllStatements(string filter)
         {
 
             try
             {
-                Console.WriteLine(filter);
+              
                 PageFilter obj=null;
                 IQueryable<Statement> query;
 
@@ -32,21 +32,24 @@ namespace ElvisApi.Service
                     obj =  JsonConvert.DeserializeObject<PageFilter>(filter);
                 }
              
-               if (!string.IsNullOrEmpty(obj?.Title))
-                {
-                    query = repo.SearchFor(i => i.Title == obj.Title);
-                }
-                else
-                {
-                    query = repo.GetAll();
-                }
+                query = !string.IsNullOrEmpty(obj?.Title) ? repo.SearchFor(i => i.Title == obj.Title) : repo.GetAll();
 
-                var result = query.GetPaged((int)obj.PageIndex, (int)obj.PageSize);
+                var result = query.Select(i =>new StatementModel
+                {
+                  Id  = i.Id,
+                  Img  = i.Img,
+                  Description  = i.Description,
+                  Phone  = i.Phone,
+                  Title = i.Title,
+                  Link  = "<a href = 'https://localhost:9001/home/details/" +
+                  i.Id +
+                  "' class= 'btn btn-white'> <i class= 'entypo-plus'></i> ნახვა </a>"
+                }).AsQueryable().GetPaged((int)obj.PageIndex, (int)obj.PageSize);
 
                 return result;
             }catch(Exception ex)
             {
-                return new PagedResult<Statement>();
+                return new PagedResult<StatementModel>();
             }
         }
 

@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ElvisApi.Database;
-using ElvisApi.Database.Entities;
+﻿using ElvisApi.Database.Entities;
 using ElvisApi.Models;
 using ElvisApi.Service.Interfaces;
-using ElvisApi.Utils;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+
 
 namespace ElvisApi.Controllers
 {
@@ -17,27 +10,27 @@ namespace ElvisApi.Controllers
     [Route("[controller]")]
     public class StatementController : ControllerBase
     {
-        private IStatementService service;
+        private readonly IStatementService _service;
 
         public StatementController(IStatementService service)
         {
-            this.service = service;
+            this._service = service;
         }
 
-        [HttpPost("GetAll/{filter}")]
-        public PagedResult<Statement> GetAll([FromForm] string filter)
+        [HttpPost("{filter}")]
+        public PagedResult<StatementModel> GetAll([FromForm] string filter)
         {
 
-            return service.GetAllStatements(filter);
+            return _service.GetAllStatements(filter);
         }
 
 
      
-        [HttpGet("GetByID/{id}")]
-        public Statement GetByID(int id)
+        [HttpGet("GetById/{id}")]
+        public Statement GetById(int id)
         {
 
-            return service.GetStatementById(id);
+            return _service.GetStatementById(id);
         }
 
 
