@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  elvisapi:
+    image: ${DOCKER_REGISTRY-}elvisapi
+    build:
+      context: .
+      dockerfile: ElvisApi/Dockerfile
