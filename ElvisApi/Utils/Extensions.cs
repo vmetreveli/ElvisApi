@@ -5,13 +5,9 @@ using ElvisApi.Database.Entities;
 using ElvisApi.Models;
 
 namespace ElvisApi.Utils
-{
- 
-        public static class Extensions
+{    public static class Extensions
         {
-
-     
-            public static PagedResult<T> GetPaged<T>(this IQueryable<T> query,
+   public static PagedResult<T> GetPaged<T>(this IQueryable<T> query,
                 int page, int pageSize) where T : class
             {
                 var result = new PagedResult<T> { CurrentPage = page, PageSize = pageSize, RowCount = query.Count() };
@@ -44,7 +40,6 @@ namespace ElvisApi.Utils
             public static IQueryable<Statement> GridFilter<T>(this IQueryable<Statement> query, Statement filter) where T : class
             {
              
-
                 if (!string.IsNullOrEmpty(filter.Title))
                 {
                     query = query.Where(i => i.Title == filter.Title);

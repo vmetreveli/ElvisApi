@@ -5,18 +5,20 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using ElvisApi.Database.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace ElvisApi.Database
 {
     public class Repository<T> : IRepository<T> where T : BaseEntity//, IEntity
     {
-        public DbSet<T> DbSet;
+        private readonly DbSet<T> DbSet;
         private readonly DbContext _context;
-
-        public Repository(PostgreSqlContext dataContext)
+        
+        public Repository(DbContext dataContext)
         {
             DbSet = dataContext.Set<T>();
             _context = dataContext;
+      
         }
 
         #region IRepository<T> Members
