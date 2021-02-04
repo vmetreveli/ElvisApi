@@ -2,7 +2,7 @@
 
 namespace ElvisApi.Database.Entities
 {
-    public abstract class Statement : BaseEntity
+    public  class Statement : BaseEntity
     {
         [Key]
         public  int Id { get; set; }

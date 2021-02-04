@@ -15,13 +15,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace ElvisApi
 {
     public class Startup
     {
-       
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -48,7 +49,35 @@ namespace ElvisApi
             // services.AddDbContext<PostgreSqlContext>(options =>
             //    options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<PostgreSqlContext>(options => options.UseInMemoryDatabase(databaseName: "postgres"));
-           services.AddMvc();
+
+            var options = new DbContextOptionsBuilder<PostgreSqlContext>()
+                .UseInMemoryDatabase(databaseName: "Test")
+                .Options;
+
+            using (var context = new PostgreSqlContext(options))
+            {
+                for (int i = 1; i < 10; i++)
+                {
+                    var testStatement1 = new Statement
+                    {
+                        Id = i,
+                        Description = "description " + i,
+                        Img = "http://1 " + i,
+                        Phone = $"{i}{i * 2}{i * 3}{i * 4}{i * 5}{i * 6}",
+                        Title = "test" + i
+                    };
+
+                    context.Statement.Add(testStatement1);
+
+                }
+
+                context.SaveChanges();
+
+
+            }
+
+
+            services.AddMvc();
 
 
             services.AddScoped<PostgreSqlContext>();
@@ -65,22 +94,24 @@ namespace ElvisApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
             }
+
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
-       
 
-         app.UseCors();
-         app.UseAuthorization();
+
+            app.UseCors();
+            app.UseAuthorization();
 
             // Shows UseCors with CorsPolicyBuilder.
             app.UseCors(x => x
-                 .AllowAnyMethod()
-                 .AllowAnyHeader()
-                 .SetIsOriginAllowed(origin => true)); // allow any origin
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true)); // allow any origin
             // .AllowCredentials()); // allow credentials
 
             app.UseEndpoints(endpoints =>
@@ -98,6 +129,6 @@ namespace ElvisApi
             });
         }
 
-   
+
     }
 }

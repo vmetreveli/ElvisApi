@@ -1,4 +1,5 @@
-﻿using ElvisApi.Database.Entities;
+﻿using System.Collections.Generic;
+using ElvisApi.Database.Entities;
 using ElvisApi.Models;
 using ElvisApi.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,21 @@ namespace ElvisApi.Controllers
             return _service.GetAllStatements(filter);
         }
 
+        [HttpPost("Filtered/")]
+        public PagedResult<StatementModel> Filtered([FromForm] PageFilter filter)
+        {
+
+            return new PagedResult<StatementModel>()
+            {
+                PageCount = 1,
+                PageSize = 15,
+                CurrentPage = 1,
+                Results = new List<StatementModel>()
+                {
+                     
+                }
+            };
+        }
 
      
         [HttpGet("GetById/{id}")]
