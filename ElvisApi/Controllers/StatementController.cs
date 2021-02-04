@@ -18,7 +18,7 @@ namespace ElvisApi.Controllers
         }
 
         [HttpPost("{filter}")]
-        public PagedResult<StatementModel> GetAll([FromForm] PageFilter filter)
+        public PagedResult<StatementModel> GetAll([FromForm] string filter)
         {
 
             return _service.GetAllStatements(filter);

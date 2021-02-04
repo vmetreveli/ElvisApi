@@ -14,10 +14,11 @@ namespace ElvisApi.Database
         private readonly DbSet<T> DbSet;
         private readonly DbContext _context;
         
-        public Repository(DbContext dataContext)
+        public Repository(PostgreSqlContext dataContext)
         {
-            DbSet = dataContext.Set<T>();
+            
             _context = dataContext;
+            DbSet = dataContext.Set<T>();
       
         }
 

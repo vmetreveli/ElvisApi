@@ -5,7 +5,7 @@ namespace ElvisApi.Service.Interfaces
 {
     public interface IStatementService
     {
-        PagedResult<StatementModel> GetAllStatements(PageFilter filter);
+        PagedResult<StatementModel> GetAllStatements(string filter);
         Statement GetStatementById(int id);
     }
 }

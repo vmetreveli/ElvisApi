@@ -15,20 +15,25 @@ namespace ElvisApi.Service
         private readonly IRepository<Statement> _repo;
         private readonly ILogger _logger;
 
-        public StatementService(IRepository<Statement> repo, ILogger logger)
+        public StatementService(IRepository<Statement> repo, ILogger<StatementService> logger)
         {
             this._repo = repo;
             _logger = logger;
         }
 
-        public PagedResult<StatementModel> GetAllStatements(PageFilter filter)
+        public PagedResult<StatementModel> GetAllStatements(string filter)
         {
             try
             {
                 _logger.LogInformation($"GetAllStatements:{filter}");
-               // PageFilter obj = null;
+                 PageFilter obj = null;
 
-                var query = !string.IsNullOrEmpty(filter?.Title) ? _repo.SearchFor(i => i.Title == filter.Title) : _repo.GetAll();
+                 if (!string.IsNullOrEmpty(filter))
+                 {
+                     obj = JsonConvert.DeserializeObject<PageFilter>(filter);
+                 }
+                 
+                var query = !string.IsNullOrEmpty(obj?.Title) ? _repo.SearchFor(i => i.Title == obj.Title) : _repo.GetAll();
 
                 var result = query.Select(i => new StatementModel
                     {
@@ -41,7 +46,7 @@ namespace ElvisApi.Service
                                i.Id +
                                "' class= 'btn btn-white'> <i class= 'entypo-plus'></i> ნახვა </a>"
                     }
-                ).AsQueryable().GetPaged(filter.PageIndex, filter.PageSize);
+                ).AsQueryable().GetPaged(obj.PageIndex, obj.PageSize);
 
                 return result;
             }

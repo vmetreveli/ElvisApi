@@ -45,21 +45,16 @@ namespace ElvisApi
                 });
             });
 
-            services.AddDbContext<PostgreSqlContext>(options =>
-               options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
-
+            // services.AddDbContext<PostgreSqlContext>(options =>
+            //    options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<PostgreSqlContext>(options => options.UseInMemoryDatabase(databaseName: "postgres"));
            services.AddMvc();
 
 
+            services.AddScoped<PostgreSqlContext>();
             services.AddScoped<IRepository<Statement>, Repository<Statement>>();
             services.AddScoped<IStatementService, StatementService>();
 
-            //services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
-            //{
-            //    builder.AllowAnyOrigin()
-            //           .AllowAnyMethod()
-            //           .AllowAnyHeader();
-            //}));
 
         }
 
